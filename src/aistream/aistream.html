@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Stream</title>
+    <style type="text/css">
+        #searchTextBox {
+            width: 100%;
+        }
+
+        #container > div {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+            overflow-wrap: break-word;
+            font-family: Arial;
+        }
+
+        .string {
+            color: green;
+        }
+
+        .number {
+            color: darkorange;
+            font-weight: bold;
+        }
+
+        .boolean {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .null {
+            color: magenta;
+        }
+
+        .key {
+            color: red;
+        }
+
+        .tp {
+          font-weight: bold;
+            color: purple;
+        }
+        .filter-match{
+            background-color:orange;
+            border:1px #000 solid;
+        }
+    </style>
+</head>
+<body>
+    <p id="connectionInitiator">
+        <input id="keyInput" type="text" placeholder="key" />
+        <input id="startButton" type="button" value="Start" />
+    </p>
+    <input type="text" id="searchTextBox" />
+    <div id="container">
+
+    </div>
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="aistream/hubs"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var items = [];
+            var chat = $.connection.aIHub;
+            var maxItemsInArray = 1000;
+            $.connection.hub.url = "aistream";
+
+
+            var regexEscape = function (text) {
+                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+            };
+
+            var syntaxHighlight = function (json, searchFilterR, searchFilterLength) {
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                    var cls = 'number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'key';
+                        } else {
+                            if ((/"(RequestData|MessageData|RemoteDependencyData|EventData|PerformanceCounterData|ExceptionData)"/.test(match))) {
+                                cls = 'tp';
+                            } else {
+                                cls = 'string';
+                            }
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'null';
+                    }
+
+                    var retHtmlString = "";
+                    if (searchFilterLength > 0) {
+                        var matchStartIndex = match.search(searchFilterR);
+                        if (matchStartIndex > -1) {
+                            if (matchStartIndex > 0) {
+                                retHtmlString += '<span class="' + cls + '">' + match.substr(0, matchStartIndex) + '</span>';
+                            }
+
+                            retHtmlString += '<span class="filter-match">' + match.substr(matchStartIndex, searchFilterLength) + '</span>';
+
+                            if (matchStartIndex + searchFilterLength < match.length) {
+                                retHtmlString += '<span class="' + cls + '">' + match.substr(matchStartIndex + searchFilterLength) + '</span>';
+                            }
+                        }
+                        else {
+                            retHtmlString = '<span class="' + cls + '">' + match + '</span>';
+                        }
+                    }
+                    else {
+                        retHtmlString = '<span class="' + cls + '">' + match + '</span>';
+                    }
+                    return retHtmlString;
+                });
+            }
+
+
+            chat.client.addItem = function (str) {
+                
+                items.unshift({ data: str });
+
+                if (items.length > maxItemsInArray)
+                {
+                    for (var i=maxItemsInArray-1; i<items.length; i++)
+                    {
+                        items[i].toBeDeleted = true;
+                    }
+                }
+            };
+
+            chat.client.confirmConnected = function (str) {
+                $("#connectionInitiator").hide();
+            };
+
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                $('#startButton').click(function () {
+                    chat.server.start($("#keyInput").val());
+                });
+            });
+
+            var processItems = function () {
+
+                var container = document.getElementById("container");
+                var searchFilter = regexEscape(document.getElementById("searchTextBox").value);
+                var searchFilterR = new RegExp(searchFilter, "i");
+
+                var visibleItemCount = 0;
+                var maxVisibleItemCount = 20;
+
+                for (var i = items.length - 1; i > 0; i--) {
+
+                    if (items[i].toBeDeleted)
+                    {
+                        container.removeChild(items[i].element);
+                        items.splice(i, 1);
+                    }
+
+                    if (!items[i].element) {
+                        items[i].element = document.createElement('div');
+
+                        if (i === items.length - 1) {
+                            container.appendChild(items[i].element);
+                        }
+                        else {
+                            container.insertBefore(items[i].element, items[i + 1].element);
+                        }
+                    }
+
+                    if (visibleItemCount >= maxVisibleItemCount) {
+                        $(items[i].element).hide();
+                        items[i].visible = false;
+                    } else {
+
+                        if (items[i].lastSearchFilter !== searchFilter) {
+                            if (items[i].data.search(searchFilterR) > -1) {
+                                items[i].element.innerHTML = syntaxHighlight(items[i].data, searchFilterR, searchFilter.length);
+                                $(items[i].element).show();
+                                items[i].visible = true;
+                            }
+                            else {
+                                $(items[i].element).hide();
+                                items[i].visible = false;
+                            }
+
+                          
+
+                            items[i].lastSearchFilter = searchFilter;
+                        }
+
+                        if (items[i].visible) {
+                            visibleItemCount++;
+                        }
+                    }
+
+                }
+
+                window.setTimeout(processItems, 100);
+            }
+
+            processItems();
+
+        });
+    </script>
+</body>
+</html>
