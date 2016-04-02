@@ -1,0 +1,19 @@
+﻿<configuration>
+  <appSettings>
+    <add key="owin:AutomaticAppStartup" value="true" />
+    <add key="owin:appStartup" value="aistream.AIStreamStartup,aistream" />
+    <add key="aistream:key" value="test" />
+    <add key="aistream:path" value="/aistream.html" />
+  </appSettings>
+  <system.web>
+    <httpModules>
+      <add name="AIStreamModule" type="aistream.AIStreamModule, aistream" />
+    </httpModules>
+  </system.web>
+  <system.webServer>
+    <modules>
+      <remove name="AIStreamModule" />
+      <add name="AIStreamModule" type="aistream.AIStreamModule, aistream" />
+    </modules>
+  </system.webServer>
+</configuration>

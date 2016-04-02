@@ -23,7 +23,7 @@ namespace aistream
 
         private void Context_BeginRequest(object sender, EventArgs e)
         {
-            if (HttpContext.Current.Request.Path.EndsWith("aistream.html", StringComparison.OrdinalIgnoreCase))
+            if (HttpContext.Current.Request.Path.EndsWith(System.Web.Configuration.WebConfigurationManager.AppSettings["aistream:path"], StringComparison.OrdinalIgnoreCase))
             {
                 using (var stream = typeof(AIStreamModule).Assembly.GetManifestResourceStream("aistream.aistream.html"))
                 {
