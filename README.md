@@ -2,6 +2,12 @@
 This Application Insights add-on lets you view telemetry items from the browser as they are issued by Application Insights. This is helpful in situations when you need to see what is happening with your application right this very second and cannot get to Azure portal or when telemetry indexing by Application Insights pipeline is delayed. 
 Essentially this add-on lets you view the same data you see in your Visual Studio debug output window, except from production.
 
+![AI Stream](https://qpmxyw.dm2303.df.livefilestore.com/y3mFomurbXpUhn1a2j8P7DtvKu_bn4k83wyheYO_dzUczL0ntpFP6lfvNMUpr3XjPW0mpAgRwISm8D8jhB2cOrD_P0MUfKDbbUeVnoWU4QmQy0FBnlYxa0Af_oJdl4kc-dr-N56Ee_DjWVeu1WcgJM2Kw?width=1024&height=944&cropmode=none)
+
+## Use at your own risk
+* This add-on is not part of Application Insights offering, it is not created or supported by Microsoft
+* It is not recommended for production applications, because of security and potential performance implications
+
 ## Step 1. Install Application Insights
 This assumes you already installed Application Insights, if you haven't please follow the steps [here](https://azure.microsoft.com/en-us/documentation/articles/app-insights-start-monitoring-app-health-usage/).
 
