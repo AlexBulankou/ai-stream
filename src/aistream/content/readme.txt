@@ -1,4 +1,4 @@
-﻿== Application Insights Telemetry Stream ==
+﻿                  == Application Insights Telemetry Stream ==
 
 This Application Insights add-on lets you view telemetry items from the browser
 as they are issued by Application Insights. 
@@ -9,5 +9,12 @@ telemetry indexing by Application Insights pipeline is delayed.
 
 Essentially this add-on lets you view the same data you see in your Visual 
 Studio debug output window, except from production.
+
+************************ IMPORTANT! USE AT YOU OWN RISK **********************
+* This add-on is not part of Application Insights offering, it is not created* 
+* or supported by Microsoft                                                  * 
+* It is not recommended for production applications, because of security and *
+* potential performance implications                                         *
+******************************************************************************
 
 Please see instructions here: https://github.com/AlexBulankou/ai-stream/blob/master/README.md
