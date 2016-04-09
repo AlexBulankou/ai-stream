@@ -34,7 +34,8 @@ namespace testaistream.Controllers
             telemetryClient.TrackDependency("TestDependency1", "TestCommand1", DateTimeOffset.Now.AddMilliseconds(-200), TimeSpan.FromMilliseconds(200), true);
             telemetryClient.TrackDependency("TestDependency2", "TestCommand2", DateTimeOffset.Now.AddMilliseconds(-300), TimeSpan.FromMilliseconds(300), false);
 
-            var response = new HttpClient().GetAsync("http://www.bing.com?q=test").Result;
+            telemetryClient.TrackMetric("RL", System.Net.WebRequest.CreateHttp("http://www.bing.com/search?q=webrequest").GetResponseAsync().Result.GetResponseStream().ReadByte());
+            telemetryClient.TrackTrace(new HttpClient().GetStringAsync("http://www.bing.com/search?q=webrequest").Result);
 
             return View();
         }
