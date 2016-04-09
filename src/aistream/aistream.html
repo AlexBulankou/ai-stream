@@ -7,6 +7,28 @@
             width: 100%;
         }
 
+        #controlPanel {
+            width: 80%;
+            margin: 0 auto;
+            font-size:large;
+        }
+        #controlPanel input{
+             font-size:large;
+             margin:5px;
+        }
+
+        #keyInput {
+            width: 80%;
+        }
+
+        #startButton {
+            width: 15%;
+        }
+
+        #saveButton, #clearButton {
+            width: 48%;
+        }
+
         #container > div {
             outline: 1px solid #ccc;
             padding: 5px;
@@ -14,6 +36,8 @@
             overflow-wrap: break-word;
             font-family: Arial;
         }
+
+       
 
         .string {
             color: green;
@@ -42,27 +66,28 @@
             color: purple;
         }
 
-        .filter-match{
-            background-color:orange;
-            border:1px #000 solid;
+        .filter-match {
+            background-color: orange;
+            border: 1px #000 solid;
         }
+
     </style>
 </head>
 <body>
-    <p id="connectionInitiator">
-        <input id="keyInput" type="text" placeholder="Please enter aistream:key value from your web.config and click Start" />
-        <input id="startButton" type="button" value="Start" />
-    </p>
-    <p id="savestream" style="display:none">
-        Save current stream to new window
-        <input id="saveButton" type="button" value="Save" />
-    </p>
+    <div id="controlPanel">
+        <p id="connectionInitiator">
+            <input id="keyInput" type="text" placeholder="Please enter aistream:key value from your web.config and click Start" />
+            <input id="startButton" type="button" value="Start" />
+        </p>
+        
+        <p id="streamControls">
+            <input id="saveButton" type="button" value="Save current stream to new window" />
+            <input id="clearButton" type="button" value="Clear stream" />
+            <input type="text" id="searchTextBox" placeholder="Type to filter and highlight" />
+        </p>
+    </div>
 
-    <p id="clearstream" style="display:none">
-        Clear stream
-        <input id="clearButton" type="button" value="Clear" />
-    </p>
-    <input type="text" id="searchTextBox" placeholder="Type to filter and highlight" />
+
     <div id="container">
 
     </div>
@@ -76,9 +101,7 @@
             var chat = $.connection.aIHub;
             var maxItemsInArray = 1000;
             $.connection.hub.url = "aistream";
-            $("#savestream").hide();
-            $("#clearstream").hide();
-
+            $("#streamControls").hide();
 
             var regexEscape = function (text) {
                 return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -134,10 +157,8 @@
 
                 items.unshift({ data: str });
 
-                if (items.length > maxItemsInArray)
-                {
-                    for (var i=maxItemsInArray-1; i<items.length; i++)
-                    {
+                if (items.length > maxItemsInArray) {
+                    for (var i = maxItemsInArray - 1; i < items.length; i++) {
                         items[i].toBeDeleted = true;
                     }
                 }
@@ -145,8 +166,7 @@
 
             chat.client.confirmConnected = function (str) {
                 $("#connectionInitiator").hide();
-                $("#savestream").show();
-                $("#clearstream").show();
+                $("#streamControls").show();
             };
 
 
@@ -179,8 +199,7 @@
 
                 for (var i = items.length - 1; i > 0; i--) {
 
-                    if (items[i].toBeDeleted)
-                    {
+                    if (items[i].toBeDeleted) {
                         container.removeChild(items[i].element);
                         items.splice(i, 1);
                     }

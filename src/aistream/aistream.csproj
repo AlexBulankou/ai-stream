@@ -76,6 +76,7 @@
     <Compile Include="AIHub.cs" />
     <Compile Include="AIStreamModule.cs" />
     <Compile Include="AIStreamTelemetryInitializer.cs" />
+    <Compile Include="Dedupper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

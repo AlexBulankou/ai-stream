@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 
@@ -33,6 +34,7 @@ namespace testaistream.Controllers
             telemetryClient.TrackDependency("TestDependency1", "TestCommand1", DateTimeOffset.Now.AddMilliseconds(-200), TimeSpan.FromMilliseconds(200), true);
             telemetryClient.TrackDependency("TestDependency2", "TestCommand2", DateTimeOffset.Now.AddMilliseconds(-300), TimeSpan.FromMilliseconds(300), false);
 
+            var response = new HttpClient().GetAsync("http://www.bing.com?q=test").Result;
 
             return View();
         }
