@@ -1,0 +1,134 @@
+﻿
+body {
+    font-family: Arial;
+}
+
+input {
+    font-family: Arial;
+}
+
+#searchTextBox, #keyInput {
+    width: 95%;
+    border: 1px solid gainsboro;
+}
+
+#keyInput {
+    width: 70%;
+}
+
+#controlPanel {
+    margin: 0 auto;
+    font-size: large;
+}
+
+    #controlPanel input {
+        font-size: large;
+        margin: 5px 6px;
+        padding: 5px;
+    }
+
+#startButton {
+    width: 15%;
+}
+
+#saveButton, #clearButton {
+    width: 80px;
+    height: 80px;
+}
+
+.telemetryItem {
+    padding: 5px;
+    margin: 5px;
+    overflow-wrap: break-word;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.telemetryItemRoot {
+    outline: 1px solid #ccc;
+}
+
+.telemetryItemMeta {
+    width: 15%;
+    float: left;
+    content: "hello";
+    position: relative;
+    height: 100%;
+}
+
+    .telemetryItemMeta::after {
+        content: "\00a0";
+    }
+
+.telemetryItemTime {
+    position: absolute;
+    top: 5px;
+    text-align: center;
+    width: 80%;
+    padding: 3px 10%;
+}
+
+    .telemetryItemTime::before {
+        content: "\0231A\00a0";
+    }
+
+.telemetryItemFiltered {
+    background-color: black;
+    color: red;
+    text-transform: uppercase;
+    position: absolute;
+    top: 30px;
+    font-size: x-large;
+    text-align: center;
+    font-weight: bold;
+    width: 80%;
+    padding: 3px 10%;
+}
+
+    .telemetryItemFiltered::after {
+        content: "filtered";
+    }
+
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+    font-weight: bold;
+}
+
+.boolean {
+    color: blue;
+    font-weight: bold;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: red;
+}
+
+.tp {
+    font-weight: bold;
+    color: purple;
+}
+
+.filter-match {
+    background-color: orange;
+    border: 1px #000 solid;
+}
+
+.chart{
+    width:200px;
+    height:200px;
+    border: 1px gainsboro solid;
+    float:left;
+    display:inline-block;
+    margin:5px;
+}
+
+#chart-container, #streamControls, #container{clear:both;}

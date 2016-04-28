@@ -2,258 +2,62 @@
 <html>
 <head>
     <title>AI Stream</title>
-    <style type="text/css">
-        #searchTextBox {
-            width: 100%;
-        }
-
-        #controlPanel {
-            width: 80%;
-            margin: 0 auto;
-            font-size:large;
-        }
-        #controlPanel input{
-             font-size:large;
-             margin:5px 6px;
-             padding:5px;
-        }
-
-        #keyInput {
-            width: 80%;
-        }
-
-        #startButton {
-            width: 15%;
-        }
-
-        #saveButton, #clearButton {
-            width: 48%;
-        }
-
-        #container > div {
-            outline: 1px solid #ccc;
-            padding: 5px;
-            margin: 5px;
-            overflow-wrap: break-word;
-            font-family: Arial;
-        }
-        .telemetryItem{
-            max-height:150px;
-            overflow-y:auto;
-        }
-       
-
-        .string {
-            color: green;
-        }
-
-        .number {
-            color: darkorange;
-            font-weight: bold;
-        }
-
-        .boolean {
-            color: blue;
-            font-weight: bold;
-        }
-
-        .null {
-            color: magenta;
-        }
-
-        .key {
-            color: red;
-        }
-
-        .tp {
-            font-weight: bold;
-            color: purple;
-        }
-
-        .filter-match {
-            background-color: orange;
-            border: 1px #000 solid;
-        }
-
-    </style>
 </head>
 <body>
-    <div id="controlPanel">
-        <p id="connectionInitiator">
-            <input id="keyInput" type="text" placeholder="Please enter aistream:key value from your web.config and click Start" />
-            <input id="startButton" type="button" value="Start" />
-        </p>
-        
-        <p id="streamControls">
-            <input id="saveButton" type="button" value="Save current stream to new window" />
-            <input id="clearButton" type="button" value="Clear stream" />
-            <input type="text" id="searchTextBox" placeholder="Type to filter and highlight" />
-        </p>
-    </div>
-
-
-    <div id="container">
-
-    </div>
+    <div id="root"></div>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.12.0.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
     <script src="aistream/hubs"></script>
+    <script src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
 
     <script type="text/javascript">
-        $(function () {
-            var items = [];
-            var chat = $.connection.aIHub;
-            var maxItemsInArray = 1000;
-            $.connection.hub.url = "aistream";
-            $("#streamControls").hide();
+        var getUrlParameterByName = function (name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        };
 
-            var regexEscape = function (text) {
-                return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-            };
+        var getRandomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        };
 
-            var syntaxHighlight = function (json, searchFilterR, searchFilterLength) {
-                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                    var cls = 'number';
-                    if (/^"/.test(match)) {
-                        if (/:$/.test(match)) {
-                            cls = 'key';
-                        } else {
-                            if ((/"(RequestData|MessageData|RemoteDependencyData|EventData|PerformanceCounterData|ExceptionData)"/.test(match))) {
-                                cls = 'tp';
-                            } else {
-                                cls = 'string';
-                            }
-                        }
-                    } else if (/true|false/.test(match)) {
-                        cls = 'boolean';
-                    } else if (/null/.test(match)) {
-                        cls = 'null';
+        var resourceHostUrl = "//ai.azureedge.net";
+        if (getUrlParameterByName("local"))
+        {
+            resourceHostUrl = "http://localhost/aistreamweb/content";
+        }
+
+        $('head').append('<link rel="stylesheet" href="'+resourceHostUrl+'/css/aistream.css" type="text/css" />');
+        $.getScript(resourceHostUrl+'/js/aistream.js').done(function () {
+
+            if (getUrlParameterByName("test")) {
+                window.aistream.confirmConnected();
+                var addTestItems = function () {
+                    var testItems = [
+                "[{\"m\":" + "0" + ",\"id\":\"TRACE-635973277347079340\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Message\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7079340Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"MessageData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"message\\\":\\\"Trace1\\\"}}}\",\"s\":true,\"ta\":\"2016-04-27T11:22:14.7087868+00:00\",\"ts\":\"2016-04-27T11:22:14.7087868+00:00\"}]",
+                    "[{\"m\":" + "0" + ",\"id\":\"EVENT-TestEvent1-635973277347088435\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Event\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7088435Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"EventData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"name\\\":\\\"TestEvent1\\\",\\\"measurements\\\":{\\\"metric1\\\":0.0116619952077335},\\\"properties\\\":{\\\"prop1\\\":\\\"val1\\\"}}}}\",\"s\":true,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:14.7097869+00:00\"}]",
+                "[{\"m\":" + "0" + ",\"id\":\"EVENT-TestEvent1-635973277347096253\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Event\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7096253Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"EventData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"name\\\":\\\"TestEvent1\\\",\\\"measurements\\\":{\\\"metric1\\\":0.64591053856812},\\\"properties\\\":{\\\"prop1\\\":\\\"val2\\\"}}}}\",\"s\":true,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:14.710288+00:00\"}]",
+                "[{\"m\":" + "0" + ",\"id\":\"EXCEPTION-635973277347116334\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Exception\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7116334Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"ExceptionData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"handledAt\\\":\\\"UserCode\\\",\\\"exceptions\\\":[{\\\"id\\\":54804024,\\\"typeName\\\":\\\"System.InvalidOperationException\\\",\\\"message\\\":\\\"Failure\\\",\\\"hasFullStack\\\":true}]}}}\",\"s\":false,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:14.7122894+00:00\"}]",
+                "[{\"m\":" + getRandomInt(0, 100) + ",\"id\":\"DEPENDENCY-nmD5WMuqqSM=-635973277345137897\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.RemoteDependency\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.5137897Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"RemoteDependencyData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"name\\\":\\\"TestDependency1\\\",\\\"id\\\":\\\"nmD5WMuqqSM=\\\",\\\"commandName\\\":\\\"TestCommand1\\\",\\\"value\\\":200,\\\"dependencyKind\\\":2,\\\"success\\\":true}}}\",\"s\":true,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:14.7142895+00:00\"}]",
+                "[{\"m\":" + "0" + ",\"id\":\"METRIC-RL-635973277347980970\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Metric\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7980970Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.internal.sdkVersion\\\":\\\"2.0.0.30671\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\",\\\"ai.operation.parentId\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"MetricData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"metrics\\\":[{\\\"name\\\":\\\"RL\\\",\\\"kind\\\":\\\"Measurement\\\",\\\"value\\\":60}]}}}\",\"s\":true,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:14.79838+00:00\"}]",
+                "[{\"m\":" + getRandomInt(100, 200) + ",\"id\":\"REQUEST-wshaO8dAeFo=-635973277347058915\",\"d\":\"{\\\"name\\\":\\\"Microsoft.ApplicationInsights.b1eca647948a4740b0c51dd4f2902950.Request\\\",\\\"time\\\":\\\"2016-04-27T11:22:14.7058915Z\\\",\\\"iKey\\\":\\\"b1eca647-948a-4740-b0c5-1dd4f2902950\\\",\\\"tags\\\":{\\\"ai.operation.id\\\":\\\"wshaO8dAeFo=\\\",\\\"ai.user.id\\\":\\\"647086C6-15B2-48C0-9FFC-9FA901CA33A6\\\",\\\"ai.session.id\\\":\\\"af4oi\\\",\\\"ai.internal.sdkVersion\\\":\\\"web: 2.0.0.25000\\\",\\\"ai.device.roleInstance\\\":\\\"albulank-lptp2\\\",\\\"ai.operation.name\\\":\\\"GET Home\/Index\\\"},\\\"data\\\":{\\\"baseType\\\":\\\"RequestData\\\",\\\"baseData\\\":{\\\"ver\\\":2,\\\"id\\\":\\\"wshaO8dAeFo=\\\",\\\"name\\\":\\\"GET Home\/Index\\\",\\\"startTime\\\":\\\"2016-04-27T04:22:14.7058915-07:00\\\",\\\"duration\\\":\\\"00:00:00.6796067\\\",\\\"success\\\":true,\\\"responseCode\\\":\\\"200\\\",\\\"url\\\":\\\"http:\/\/localhost\/testaistream\\\",\\\"httpMethod\\\":\\\"GET\\\"}}}\",\"s\":true,\"ta\":\"" + new Date().toISOString() + "\",\"ts\":\"2016-04-27T11:22:15.3861337+00:00\"}]"
+                    ];
+
+                    for (var i = 0; i < testItems.length; i++) {
+                        window.aistream.addItems(testItems[i]);
                     }
 
-                    var retHtmlString = "";
-                    if (searchFilterLength > 0) {
-                        var matchStartIndex = match.search(searchFilterR);
-                        if (matchStartIndex > -1) {
-                            if (matchStartIndex > 0) {
-                                retHtmlString += '<span class="' + cls + '">' + match.substr(0, matchStartIndex) + '</span>';
-                            }
-
-                            retHtmlString += '<span class="filter-match">' + match.substr(matchStartIndex, searchFilterLength) + '</span>';
-
-                            if (matchStartIndex + searchFilterLength < match.length) {
-                                retHtmlString += '<span class="' + cls + '">' + match.substr(matchStartIndex + searchFilterLength) + '</span>';
-                            }
-                        }
-                        else {
-                            retHtmlString = '<span class="' + cls + '">' + match + '</span>';
-                        }
-                    }
-                    else {
-                        retHtmlString = '<span class="' + cls + '">' + match + '</span>';
-                    }
-                    return retHtmlString;
-                });
-            }
-
-
-            chat.client.addItem = function (str) {
-
-                items.unshift({ data: str });
-
-                if (items.length > maxItemsInArray) {
-                    for (var i = maxItemsInArray - 1; i < items.length; i++) {
-                        items[i].toBeDeleted = true;
-                    }
-                }
-            };
-
-            chat.client.confirmConnected = function (str) {
-                $("#connectionInitiator").hide();
-                $("#streamControls").show();
-            };
-
-
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                $('#startButton').click(function () {
-                    chat.server.start($("#keyInput").val());
-                });
-                $('#saveButton').click(function () {
-                    var win = window.open("", "", "width=800,height=600,scrollbars=yes,resizable=yes");
-                    win.document.write(JSON.stringify(items));
-                    win.document.title = "AI Raw Data"
-                });
-                $('#clearButton').click(function () {
-                    // Clean the UI and the array
-                    $("#container > div").remove();
-                    items.length = 0;
-                });
-
-            });
-
-            var processItems = function () {
-
-                var container = document.getElementById("container");
-                var searchFilter = regexEscape(document.getElementById("searchTextBox").value);
-                var searchFilterR = new RegExp(searchFilter, "i");
-
-                var visibleItemCount = 0;
-                var maxVisibleItemCount = 20;
-
-                for (var i = items.length - 1; i > 0; i--) {
-
-                    if (items[i].toBeDeleted) {
-                        container.removeChild(items[i].element);
-                        items.splice(i, 1);
-                    }
-
-                    if (!items[i].element) {
-                        items[i].element = document.createElement('div');
-                        items[i].element.className = "telemetryItem";
-
-                        if (i === items.length - 1) {
-                            container.appendChild(items[i].element);
-                        }
-                        else {
-                            container.insertBefore(items[i].element, items[i + 1].element);
-                        }
-                    }
-
-                    if (visibleItemCount >= maxVisibleItemCount) {
-                        $(items[i].element).hide();
-                        items[i].visible = false;
-                    } else {
-
-                        if (items[i].lastSearchFilter !== searchFilter) {
-                            if (items[i].data.search(searchFilterR) > -1) {
-                                items[i].element.innerHTML = syntaxHighlight(items[i].data, searchFilterR, searchFilter.length);
-                                $(items[i].element).show();
-                                items[i].visible = true;
-                            }
-                            else {
-                                $(items[i].element).hide();
-                                items[i].visible = false;
-                            }
-
-
-
-                            items[i].lastSearchFilter = searchFilter;
-                        }
-
-                        if (items[i].visible) {
-                            visibleItemCount++;
-                        }
-                    }
-
+                    //window.setTimeout(addTestItems, getRandomInt(10,2000));
                 }
 
-                window.setTimeout(processItems, 100);
+                addTestItems();
             }
-
-            processItems();
-
         });
+
     </script>
 </body>
 </html>

@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testaistream", "testaistream\testaistream.csproj", "{041C2927-E28B-4240-906E-EB9B013C1005}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aistream", "aistream\aistream.csproj", "{68F32D4E-7648-4C77-A20F-C765CA40E2BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "requestgenerator", "requestgenerator\requestgenerator.csproj", "{1DA49E79-9523-44C5-8998-8FBDE44F4324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aistreamweb", "aistreamweb\aistreamweb.csproj", "{EB19C25C-3705-4026-B2C0-E64BB9184419}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{68F32D4E-7648-4C77-A20F-C765CA40E2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68F32D4E-7648-4C77-A20F-C765CA40E2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68F32D4E-7648-4C77-A20F-C765CA40E2BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA49E79-9523-44C5-8998-8FBDE44F4324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA49E79-9523-44C5-8998-8FBDE44F4324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA49E79-9523-44C5-8998-8FBDE44F4324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA49E79-9523-44C5-8998-8FBDE44F4324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB19C25C-3705-4026-B2C0-E64BB9184419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB19C25C-3705-4026-B2C0-E64BB9184419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB19C25C-3705-4026-B2C0-E64BB9184419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB19C25C-3705-4026-B2C0-E64BB9184419}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,7 +9,7 @@
     using System.IO;
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
     using System.Threading.Tasks;
-
+    using Newtonsoft.Json;
     public static class UserHandler
     {
         public static HashSet<string> ConnectedIds = new HashSet<string>();
@@ -22,8 +22,8 @@
 
         public AIHub()
         {
-            this.telemetryListener = this.OnNewTelemetryItem;
-            AIStreamTelemetryInitializer.Listener = this.telemetryListener;
+            AIStreamAggregator.Instance.AreListenersAttached = () => UserHandler.ConnectedIds.Count > 0;
+            AIStreamAggregator.Instance.OnItemsReady = this.OnItemsReady;
           
         }
 
@@ -34,21 +34,14 @@
         }
 
 
-        public void OnNewTelemetryItem(ITelemetry telemetry)
+        internal void OnItemsReady(IEnumerable<AIStreamTelemetryItem> items)
         {
             if (UserHandler.ConnectedIds.Count > 0)
             {
-                using (MemoryStream stream = new MemoryStream(JsonSerializer.Serialize(new ITelemetry[] { telemetry }, false)))
+                foreach (var connectionId in UserHandler.ConnectedIds)
                 {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        string str = reader.ReadToEnd();
-                        foreach (var connectionId in UserHandler.ConnectedIds)
-                        {
-                            Clients.Client(connectionId).addItem(str);
-                        }
-
-                    }
+                    var payload = JsonConvert.SerializeObject(items.ToArray());
+                    Clients.Client(connectionId).addItems(payload);
                 }
             }
         }
