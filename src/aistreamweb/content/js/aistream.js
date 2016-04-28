@@ -333,7 +333,9 @@ $(function () {
 
         for (var i = 0; i < items.length; i++) {
             if (items[i].toBeDeleted) {
-                container.removeChild(items[i].element);
+                if (items[i].element) {
+                    container.removeChild(items[i].element);
+                }
                 items.splice(i, 1);
                 i--;
                 continue;
