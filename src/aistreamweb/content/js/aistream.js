@@ -147,7 +147,7 @@ $(function () {
 
     $("#root").html("<div id=\"controlPanel\">" +
             "<p id=\"connectionInitiator\">" +
-                "<input id=\"keyInput\" type=\"text\" placeholder=\"Please enter aistream:key value from your web.config and click Start\" />" +
+                "<input id=\"keyInput\" type=\"password\" placeholder=\"Please enter aistream:key value from your web.config and click Start\"  onkeydown=\"if (event.keyCode == 13){document.getElementById('startButton').click();}\" />" +
                 "<input id=\"startButton\" type=\"button\" value=\"Start\" />" +
             "</p>" +
             "<div id=\"chart-container\">" +
